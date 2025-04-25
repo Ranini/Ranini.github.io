@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carte interactive : Canaux et Détroits</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; }
+    #map { height: 100vh; width: 100%; }
+    .leaflet-popup-content input {
+      width: 100%;
+      padding: 5px;
+      font-size: 1rem;
+    }
+    #score, #controls {
+      position: absolute;
+      top: 10px;
+      z-index: 999;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      font-weight: bold;
+    }
+    #score { left: 10px; }
+    #controls { right: 10px; display: flex; gap: 10px; }
+    button {
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div id="score">Score : 0 / 10</div>
+  <div id="controls">
+    <button onclick="reinitialiser()">🔄 Réinitialiser</button>
+    <button onclick="modeRevision()">📘 Mode Révision</button>
+  </div>
+  <div id="map"></div>
+
+  <script>
+    const points = [
+      { name: "canal de panama", coords: [9.2, -79.7], validated: false },
+      { name: "canal de suez", coords: [30.5, 32.3], validated: false },
+      { name: "détroit de gibraltar", coords: [36.0, -5.5], validated: false },
+      { name: "détroit de béring", coords: [65.8, -169.0], validated: false },
+      { name: "détroit de magellan", coords: [-52.6, -70.0], validated: false },
+      { name: "détroit du bosphore", coords: [41.0, 29.0], validated: false },
+      { name: "détroit de malacca", coords: [2.5, 101.0], validated: false },
+      { name: "détroit de bab-al-mandeb", coords: [12.7, 43.3], validated: false },
+      { name: "détroit d'ormuz", coords: [26.5, 56.2], validated: false },
+      { name: "la manche", coords: [50.0, -1.0], validated: false }
+    ];
+
+    let score = 0;
+    let markers = [];
+
+    const map = L.map('map', {
+      maxBounds: [
+        [-80, -180],
+        [85, 180]
+      ],
+      maxBoundsViscosity: 1.0,
+      minZoom: 2,
+      maxZoom: 6
+    }).setView([20, 10], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    function initializeMarkers() {
+      markers.forEach(m => map.removeLayer(m));
+      markers = [];
+      score = 0;
+      points.forEach(p => p.validated = false);
+      document.getElementById("score").innerText = `Score : ${score} / 10`;
+
+      points.forEach((point, i) => {
+        const marker = L.marker(point.coords).addTo(map);
+        markers.push(marker);
+        marker.bindPopup(`<strong>Quel est ce lieu ?</strong><br>
+          <input type='text' id='input${i}' placeholder='Tape ta réponse...' onkeydown='if(event.key==="Enter"){check(${i})}' autocomplete='off'>
+          <div id='feedback${i}' style='margin-top:5px;font-weight:bold;'></div>`);
+      });
+    }
+
+    function normalize(str) {
+      return str.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+    }
+
+    function check(i) {
+      if (points[i].validated) return;
+      const input = document.getElementById(`input${i}`);
+      const feedback = document.getElementById(`feedback${i}`);
+      const guess = normalize(input.value);
+      const answer = normalize(points[i].name);
+      if (guess === answer) {
+        feedback.innerHTML = "✅ Bonne réponse !";
+        feedback.style.color = "green";
+        input.disabled = true;
+        input.style.backgroundColor = '#e0ffe0';
+        points[i].validated = true;
+        score++;
+        document.getElementById("score").innerText = `Score : ${score} / 10`;
+      } else {
+        feedback.innerHTML = "❌ Mauvaise réponse";
+        feedback.style.color = "red";
+      }
+    }
+
+    function reinitialiser() {
+      initializeMarkers();
+    }
+
+    function modeRevision() {
+      markers.forEach((marker, i) => {
+        marker.bindPopup(`<strong>${points[i].name}</strong>`);
+        marker.openPopup();
+      });
+    }
+
+    initializeMarkers();
+  </script>
+</body>
+</html>
