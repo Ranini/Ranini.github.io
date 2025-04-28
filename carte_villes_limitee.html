@@ -41,7 +41,7 @@
   </style>
 </head>
 <body>
-  <div id="score">Score : 0 / 10</div>
+  <div id="score">Score : 0 / 26</div>
   <div id="controls">
     <button onclick="reinitialiser()">🔄 Réinitialiser</button>
     <button onclick="modeRevision()">📘 Mode Révision</button>
@@ -50,18 +50,35 @@
   <div id="map"></div>
 
   <script>
-    const points = [
-      { name: "New York", coords: [40.7128, -74.0060], validated: false },
-      { name: "Londres", coords: [51.5074, -0.1278], validated: false },
-      { name: "Paris", coords: [48.8566, 2.3522], validated: false },
-      { name: "Tokyo", coords: [35.6762, 139.6503], validated: false },
-      { name: "Singapour", coords: [1.3521, 103.8198], validated: false },
-      { name: "Beijing", coords: [39.9042, 116.4074], validated: false },
-      { name: "Shanghai", coords: [31.2304, 121.4737], validated: false },
-      { name: "Séoul", coords: [37.5665, 126.9780], validated: false },
-      { name: "Toronto", coords: [43.6532, -79.3832], validated: false },
-      { name: "Madrid", coords: [40.4168, -3.7038], validated: false }
-    ];
+  const points = [
+    { name: "New York", coords: [40.7128, -74.0060], validated: false },
+    { name: "Londres", coords: [51.5074, -0.1278], validated: false },
+    { name: "Paris", coords: [48.8566, 2.3522], validated: false },
+    { name: "Tokyo", coords: [35.6762, 139.6503], validated: false },
+    { name: "Singapour", coords: [1.3521, 103.8198], validated: false },
+    { name: "Beijing", coords: [39.9042, 116.4074], validated: false },
+    { name: "Shanghai", coords: [31.2304, 121.4737], validated: false },
+    { name: "Séoul", coords: [37.5665, 126.9780], validated: false },
+    { name: "Toronto", coords: [43.6532, -79.3832], validated: false },
+    { name: "Madrid", coords: [40.4168, -3.7038], validated: false },
+    { name: "San Francisco", coords: [37.7749, -122.4194], validated: false },
+    { name: "Washington D.C.", coords: [38.9072, -77.0369], validated: false },
+    { name: "Bruxelles", coords: [50.8503, 4.3517], validated: false },
+    { name: "Sydney", coords: [-33.8688, 151.2093], validated: false },
+    { name: "Istanbul", coords: [41.0082, 28.9784], validated: false },
+    { name: "Rotterdam", coords: [51.9225, 4.4792], validated: false },
+    { name: "Dubaï", coords: [25.276987, 55.296249], validated: false },
+    { name: "Moscou", coords: [55.7558, 37.6173], validated: false },
+    { name: "Jérusalem", coords: [31.7683, 35.2137], validated: false },
+    { name: "La Mecque", coords: [21.4225, 39.8262], validated: false },
+    { name: "Kyïv", coords: [50.4501, 30.5234], validated: false },
+    { name: "Mumbai", coords: [19.0760, 72.8777], validated: false },
+    { name: "Jakarta", coords: [-6.2088, 106.8456], validated: false },
+    { name: "Le Caire", coords: [30.0444, 31.2357], validated: false },
+    { name: "Taipei", coords: [25.032969, 121.565418], validated: false },
+    { name: "Rome", coords: [41.9028, 12.4964], validated: false }
+];
+
 
     let score = 0;
     let markers = [];
@@ -85,7 +102,7 @@
       markers = [];
       score = 0;
       points.forEach(p => p.validated = false);
-      document.getElementById("score").innerText = `Score : ${score} / 10`;
+      document.getElementById("score").innerText = `Score : ${score} / 26`;
 
       points.forEach((point, i) => {
         const marker = L.marker(point.coords).addTo(map);
@@ -113,7 +130,7 @@
         input.style.backgroundColor = '#e0ffe0';
         points[i].validated = true;
         score++;
-        document.getElementById("score").innerText = `Score : ${score} / 10`;
+        document.getElementById("score").innerText = `Score : ${score} / 26`;
       } else {
         feedback.innerHTML = "❌ Mauvaise réponse";
         feedback.style.color = "red";
