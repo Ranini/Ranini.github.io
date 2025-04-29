@@ -87,18 +87,20 @@
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    points.forEach((point, i) => {
-      const marker = L.marker(point.coords).addTo(map);
-      marker.bindPopup(() => {
-        if (revisionMode) {
-          return `<strong>${point.name}</strong>`;
-        } else {
-          return `<strong>Quel est ce pays ?</strong><br>
-          <input type='text' id='input${i}' placeholder='Tape ta réponse...' onkeydown='if(event.key==="Enter"){check(${i})}'>
-          <div id='feedback${i}' style='margin-top:5px;font-weight:bold;'></div>`;
-        }
+    function renderMarkers() {
+      points.forEach((point, i) => {
+        const marker = L.marker(point.coords).addTo(map);
+        marker.bindPopup(() => {
+          if (revisionMode) {
+            return `<strong>${point.name}</strong>`;
+          } else {
+            return `<strong>Quel est ce pays ?</strong><br>
+              <input type='text' id='input${i}' placeholder='Tape ta réponse...' onkeydown='if(event.key==="Enter"){check(${i})}'>
+              <div id='feedback${i}' style='margin-top:5px;font-weight:bold;'></div>`;
+          }
+        });
       });
-    });
+    }
 
     function normalize(str) {
       return str.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
@@ -125,8 +127,13 @@
     function toggleMode() {
       revisionMode = !revisionMode;
       document.getElementById("modeBtn").innerText = revisionMode ? "📝 Mode Quiz" : "🎯 Mode Révision";
-      location.reload();
+      map.eachLayer((layer) => {
+        if (layer instanceof L.Marker) map.removeLayer(layer);
+      });
+      renderMarkers();
     }
+
+    renderMarkers();
   </script>
 </body>
 </html>
