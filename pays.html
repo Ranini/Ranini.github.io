@@ -75,6 +75,7 @@
 
     let score = 0;
     let revisionMode = false;
+    const answered = new Array(points.length).fill(false);
 
     const map = L.map('map', {
       maxBounds: [[-80, -180], [85, 180]],
@@ -111,14 +112,15 @@
       const feedback = document.getElementById(`feedback${i}`);
       const guess = normalize(input.value);
       const answer = normalize(points[i].name);
-      if (guess === answer && !input.disabled) {
+      if (guess === answer && !answered[i]) {
         feedback.innerHTML = "✅ Bonne réponse !";
         feedback.style.color = "green";
         input.disabled = true;
         input.style.backgroundColor = '#e0ffe0';
+        answered[i] = true;
         score++;
         document.getElementById("score").innerText = `Score : ${score} / 19`;
-      } else if (!input.disabled) {
+      } else if (!answered[i]) {
         feedback.innerHTML = "❌ Mauvaise réponse";
         feedback.style.color = "red";
       }
