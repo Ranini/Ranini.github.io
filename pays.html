@@ -43,8 +43,9 @@
 <body>
   <div id="score">Score : 0 / 10</div>
   <div id="nav">
-    <button onclick="window.location.href='villes.html'">🏙️ Villes</button>
-    <button onclick="window.location.href='detroits.html'">🌊 Détroits & Canaux</button>
+    <button onclick="window.location.href='carte_villes_limitee.html'">🏙️ Villes</button>
+    <button onclick="window.location.href='index.html'">🌊 Détroits & Canaux</button>
+    <button onclick="toggleMode()" id="modeBtn">🎯 Mode Révision</button>
     <button onclick="window.location.reload()">🔄 Réinitialiser</button>
   </div>
   <div id="map"></div>
@@ -64,6 +65,8 @@
     ];
 
     let score = 0;
+    let revisionMode = false;
+
     const map = L.map('map', {
       maxBounds: [[-80, -180], [85, 180]],
       maxBoundsViscosity: 1.0,
@@ -77,9 +80,15 @@
 
     points.forEach((point, i) => {
       const marker = L.marker(point.coords).addTo(map);
-      marker.bindPopup(`<strong>Quel est ce lieu ?</strong><br>
-        <input type='text' id='input${i}' placeholder='Tape ta réponse...' onkeydown='if(event.key==="Enter"){check(${i})}'>
-        <div id='feedback${i}' style='margin-top:5px;font-weight:bold;'></div>`);
+      marker.bindPopup(() => {
+        if (revisionMode) {
+          return `<strong>${point.name}</strong>`;
+        } else {
+          return `<strong>Quel est ce lieu ?</strong><br>
+          <input type='text' id='input${i}' placeholder='Tape ta réponse...' onkeydown='if(event.key==="Enter"){check(${i})}'>
+          <div id='feedback${i}' style='margin-top:5px;font-weight:bold;'></div>`;
+        }
+      });
     });
 
     function normalize(str) {
@@ -102,6 +111,12 @@
         feedback.innerHTML = "❌ Mauvaise réponse";
         feedback.style.color = "red";
       }
+    }
+
+    function toggleMode() {
+      revisionMode = !revisionMode;
+      document.getElementById("modeBtn").innerText = revisionMode ? "📝 Mode Quiz" : "🎯 Mode Révision";
+      location.reload();
     }
   </script>
 </body>
