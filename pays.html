@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carte interactive : Canaux et Détroits</title>
+  <title>Carte interactive : Pays</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
@@ -41,7 +41,7 @@
   </style>
 </head>
 <body>
-  <div id="score">Score : 0 / 10</div>
+  <div id="score">Score : 0 / 19</div>
   <div id="nav">
     <button onclick="window.location.href='carte_villes_limitee.html'">🏙️ Villes</button>
     <button onclick="window.location.href='index.html'">🌊 Détroits & Canaux</button>
@@ -52,16 +52,25 @@
 
   <script>
     const points = [
-      { name: "canal de panama", coords: [9.2, -79.7] },
-      { name: "canal de suez", coords: [30.5, 32.3] },
-      { name: "détroit de gibraltar", coords: [36.0, -5.5] },
-      { name: "détroit de béring", coords: [65.8, -169.0] },
-      { name: "détroit de magellan", coords: [-52.6, -70.0] },
-      { name: "détroit du bosphore", coords: [41.0, 29.0] },
-      { name: "détroit de malacca", coords: [2.5, 101.0] },
-      { name: "détroit de bab-al-mandeb", coords: [12.7, 43.3] },
-      { name: "détroit d'ormuz", coords: [26.5, 56.2] },
-      { name: "la manche", coords: [50.0, -1.0] }
+      { name: "afrique du sud", coords: [-29, 24] },
+      { name: "canada", coords: [56, -106] },
+      { name: "etats-unis", coords: [38, -97] },
+      { name: "mexique", coords: [23, -102] },
+      { name: "argentine", coords: [-34, -64] },
+      { name: "chine", coords: [35, 103] },
+      { name: "brésil", coords: [-10, -55] },
+      { name: "japon", coords: [36, 138] },
+      { name: "corée du sud", coords: [36, 127] },
+      { name: "inde", coords: [22, 78] },
+      { name: "indonésie", coords: [-5, 120] },
+      { name: "arabie saoudite", coords: [25, 45] },
+      { name: "turquie", coords: [39, 35] },
+      { name: "france", coords: [46, 2] },
+      { name: "allemagne", coords: [51, 10] },
+      { name: "italie", coords: [42.5, 12.5] },
+      { name: "royaume-uni", coords: [55, -3] },
+      { name: "russie", coords: [60, 90] },
+      { name: "australie", coords: [-25, 133] }
     ];
 
     let score = 0;
@@ -84,7 +93,7 @@
         if (revisionMode) {
           return `<strong>${point.name}</strong>`;
         } else {
-          return `<strong>Quel est ce lieu ?</strong><br>
+          return `<strong>Quel est ce pays ?</strong><br>
           <input type='text' id='input${i}' placeholder='Tape ta réponse...' onkeydown='if(event.key==="Enter"){check(${i})}'>
           <div id='feedback${i}' style='margin-top:5px;font-weight:bold;'></div>`;
         }
@@ -106,7 +115,7 @@
         input.disabled = true;
         input.style.backgroundColor = '#e0ffe0';
         score++;
-        document.getElementById("score").innerText = `Score : ${score} / 10`;
+        document.getElementById("score").innerText = `Score : ${score} / 19`;
       } else if (!input.disabled) {
         feedback.innerHTML = "❌ Mauvaise réponse";
         feedback.style.color = "red";
